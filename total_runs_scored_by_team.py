@@ -1,43 +1,31 @@
 import csv
-import matplotlib.pyplot as plt
+from plot_graph import plot
 
 
-# collect all the data, team name and total runs over the history of IPL.
 def data_collection():
+    '''
+    Collect all the data, team name and total runs over the history of IPL.
+    '''
     teams_runs = {}
-    duplicate = set()
 
     # open the csv file and clean data
     with open('deliveries.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
+        csv_reader.__next__()
+
         for line in csv_reader:
-            if line[0] == 'match_id':
-                continue
-            if line[2] not in duplicate:
-                duplicate.add(line[2])
-                teams_runs[line[2]] = int(line[-4])
-            else:
-                teams_runs[line[2]] = teams_runs[line[2]] + int(line[-4])
+            team_name = line[2]
+            runs = int(line[-4])
+            teams_runs[team_name] = teams_runs.get(team_name, 0) + runs
+
     return teams_runs
-
-
-# plot details
-def plot_graph(data):
-    teams = []
-    runs = []
-    for i in sorted(data.items(), key=lambda i: (i[1], i[0]), reverse=True):
-        teams.append(i[0])
-        runs.append(i[1])
-    x = teams
-    y = runs
-
-    plt.bar(x, y, align='center', width=0.8)
-    plt.xticks(rotation="20", fontsize=10)
-    plt.ylabel('Total runs scored')
-    plt.title('Total Runs Scored By Team')
-    plt.show()
 
 
 if __name__ == "__main__":
     data = data_collection()
-    plot_graph(data)
+    plot(data, "center",
+         0.8, 10,
+         'Teams', "Teams Runs Scored",
+         "Total Runs Scored By Teams",
+         'all', 18
+         )

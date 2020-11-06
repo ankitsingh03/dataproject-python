@@ -2,3 +2,4 @@ env
 .vscode
 deliveries.csv
 matches.csv
+trial.py
